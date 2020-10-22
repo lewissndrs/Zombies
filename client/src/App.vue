@@ -8,20 +8,42 @@
       <h3>don't sue me bro</h3>
       </hgroup>
 
-      <nav>
-        <router-link :to="{ name: 'game' }">Start a game</router-link>
-        <a href="">Log in/register</a>
-      </nav>
-
-      <router-view></router-view>
+      <div>
+        <a @click.prevent='logIn' v-if="loggedIn === false" href="">Log in/register</a>
+        <p v-if="loggedIn ===true">{{player.name}}</p>
+      </div>  
+      
     </header>
+
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
+import PlayerService from '@/services/PlayerService.js';
 export default {
   name: 'app',
-
+  data() {
+    return {
+      loggedIn: false,
+      player: null,
+      players: []
+    }
+  },
+  mounted() {
+    this.fetchPlayers()
+  },
+  methods: {
+    fetchPlayers: function() {
+      PlayerService.getPlayers()
+      .then(results => this.players = results)
+    },
+    // placeholder function
+    logIn: function() {
+      this.player = this.players[0];
+      this.loggedIn = true;
+    }
+  }
 }
 </script>
 

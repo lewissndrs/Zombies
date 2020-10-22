@@ -1,6 +1,6 @@
 <template>
   <div id='home'>
-      <button>Play Game!</button>
+      <button @click='gameRoute'>Play Game!</button>
       <leader-board />
   </div>
 </template>
@@ -11,6 +11,11 @@ export default {
     name: 'home',
     components: {
         'leader-board':LeaderBoard
+    },
+    methods: {
+        gameRoute: function() {
+            this.$router.push({ name: 'game' })
+        }
     }
 }
 </script>
