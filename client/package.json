@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "prompt": "^1.0.0",
     "vue": "^2.6.11"
   },
   "devDependencies": {
