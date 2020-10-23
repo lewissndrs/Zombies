@@ -15,7 +15,7 @@
       
     </header>
 
-    <router-view></router-view>
+    <router-view :player="player"></router-view>
   </div>
 </template>
 
