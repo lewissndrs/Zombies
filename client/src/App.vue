@@ -2,7 +2,7 @@
   <div id='app'>
     <header>
       <hgroup>
-        <router-link :to='{ name: "home"}'>
+        <router-link :to='{ name: "home"}' :players="players">
           <h1>Zombie Dice</h1>
         </router-link>
       <h3>don't sue me bro</h3>
@@ -15,7 +15,7 @@
       
     </header>
 
-    <router-view :player="player"></router-view>
+    <router-view :player="player" :players="players"></router-view>
   </div>
 </template>
 
