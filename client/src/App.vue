@@ -21,6 +21,7 @@
 <script>
 import LogIn from '@/components/LogIn.vue';
 import PlayerService from '@/services/PlayerService.js';
+import {eventBus} from '@/main.js';
 export default {
   name: 'app',
   components: {
@@ -32,7 +33,11 @@ export default {
     }
   },
   mounted() {
-    this.fetchPlayers()
+    this.fetchPlayers();
+
+    eventBus.$on('player-added', (player) => {
+      this.players.push(player)
+    })
   },
   methods: {
     fetchPlayers: function() {
@@ -45,5 +50,13 @@ export default {
 </script>
 
 <style>
+
+header {
+  display: flex;
+  justify-content: space-around;
+  align-content: stretch;
+  background-color: darkred;
+  color: white;
+}
 
 </style>
