@@ -1,7 +1,7 @@
 <template>
   <div id='home'>
-      <button @click='gameRoute'>Play Game!</button>
-      <leader-board />
+      <button v-if="player" @click='gameRoute'>Play Game!</button>
+      <leader-board  :players="players"/>
   </div>
 </template>
 
@@ -16,7 +16,8 @@ export default {
         gameRoute: function() {
             this.$router.push({ name: 'game' })
         }
-    }
+    },
+    props:['player', 'players']
 }
 </script>
 
