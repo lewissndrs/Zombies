@@ -8,8 +8,8 @@
                     <input type="text" name='username' v-model="form.username" required>
                     <label for="password">Password</label>
                     <input type="text" name='password' v-model="form.password" required>
-                    <button type="submit" @click='submitLogIn'>Log in</button>
-                    <button type="submit" @click='submitNewPlayer'>Create new account</button>
+                    <button type="submit" @click.prevent='submitLogIn'>Log in</button>
+                    <button type="submit" @click.prevent='submitNewPlayer'>Create new account</button>
 
                 </form>
           </pop-up-base>
