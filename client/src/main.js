@@ -1,10 +1,13 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router.js';
+import PortalVue from 'portal-vue';
+
+Vue.use(PortalVue);
 
 Vue.config.productionTip = false
 
-const eventBus = new Vue()
+export const eventBus = new Vue()
 
 new Vue({
   router,

@@ -8,25 +8,26 @@
       <h3>don't sue me bro</h3>
       </hgroup>
 
-      <div>
-        <a @click.prevent='logIn' v-if="loggedIn === false" href="">Log in/register</a>
-        <p v-if="loggedIn ===true">{{player.name}}</p>
-      </div>  
+      <log-in :players='players'></log-in>
       
     </header>
 
     <router-view></router-view>
+    
+    <PortalTarget name="login"/>
   </div>
 </template>
 
 <script>
+import LogIn from '@/components/LogIn.vue';
 import PlayerService from '@/services/PlayerService.js';
 export default {
   name: 'app',
+  components: {
+    'log-in':LogIn
+  },
   data() {
     return {
-      loggedIn: false,
-      player: null,
       players: []
     }
   },
@@ -37,14 +38,10 @@ export default {
     fetchPlayers: function() {
       PlayerService.getPlayers()
       .then(results => this.players = results)
-    },
-    // placeholder function
-    logIn: function() {
-      this.player = this.players[0];
-      this.loggedIn = true;
+    }
     }
   }
-}
+
 </script>
 
 <style>
