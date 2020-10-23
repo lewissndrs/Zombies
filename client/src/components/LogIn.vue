@@ -33,9 +33,19 @@ export default {
         eventBus.$on('show-pop-up', (message) => {this.showPopup = message} )
     },
     methods: {
-    // placeholder function
     logIn: function(form) {
-      this.player = this.players[0];
+
+    const index = this.players.findIndex( (player) => player.name === form.username );
+    
+    if (index === -1) {
+        return console.log('USER DOES NOT EXIST')
+    } else {
+        if (form.password === this.players[index].password) {
+            this.player = this.players[index]
+        } else {
+            return console.log('PASSWORD DOES NOT MATCH')
+        }
+    }
       this.loggedIn = true;
      },
      logOut: function() {

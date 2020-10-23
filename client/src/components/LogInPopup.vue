@@ -3,7 +3,7 @@
       <Portal to="login">
           <pop-up-base>
                 <form v-on:submit.prevent="submitLogIn" class='form'>
-                    <p>Log in</p>
+                    <h2>Log in</h2>
                     <label for="username">Username: </label>
                     <input type="text" name='username' v-model="form.username" required>
                     <label for="password">Password</label>
