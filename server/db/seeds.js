@@ -8,9 +8,9 @@ db.players.insertMany([
         password: "password",
         achievements:{
             totalRolls: 20,
-            totalPoints: 15,
-            gamesPlayed: 2,
-            gamesWon: 1
+            totalPoints: 18,
+            gamesPlayed: 4,
+            gamesWon: 3
         }
     },
   
@@ -19,9 +19,9 @@ db.players.insertMany([
         password: "password",
         achievements:{
             totalRolls: 22,
-            totalPoints: 10,
+            totalPoints: 15,
             gamesPlayed: 3,
-            gamesWon: 0
+            gamesWon: 3
         }
     },
 
@@ -32,9 +32,21 @@ db.players.insertMany([
             totalRolls: 30,
             totalPoints: 19,
             gamesPlayed: 3,
-            gamesWon: 1
+            gamesWon: 2
+        }
+    },
+
+    {
+        name: "Craig",
+        password: "password",
+        achievements:{
+            totalRolls: 60,
+            totalPoints: 32,
+            gamesPlayed: 6,
+            gamesWon: 5
         }
     }
+
 ]);
 
 
