@@ -35,18 +35,7 @@
     <p>
       The game ends when the first person reaches 13 brains. See if you can find all the achievements on your path to victory.
     </p>
-<<<<<<< HEAD
-    <div id="play-game-holder">
-      <label v-if="player" for="selectDifficulty">Please Select difficulty</label>
-      <select v-if="player" v-model="difficulty" v-on:change="changeDifficulty">
-        <option value=1>Easy</option>
-        <option value=2>Difficult</option>
-      </select>
-      <button id="button-play" v-if="player" @click='gameRoute'>Play Game!</button>
-    </div>
-=======
     
->>>>>>> d6a2f25a67d8f6f0ee5d48d62f4e8142bd0c510e
     
   </div>
 </template>
