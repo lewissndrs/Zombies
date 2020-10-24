@@ -14,6 +14,7 @@
                     <button v-if="!createNew" type="submit" @click.prevent='createPlayer'>Create New Account</button>
                     <button v-if="createNew" type="submit" @click.prevent='submitNewPlayer'>Create new account</button>
                     <button v-if="createNew" type="submit" @click.prevent='existingLogIn'>Log in to existing</button>
+                    <p v-if="errorMessage">{{this.errorMessage}}</p>
                 </form>
           </pop-up-base>
       </Portal>
@@ -33,7 +34,8 @@ export default {
                 password: '',
                 repeatPassword: ''
             },
-            createNew: false
+            createNew: false,
+            errorMessage: ''
         }
     },
     methods: {
@@ -42,7 +44,7 @@ export default {
           eventBus.$emit('show-pop-up',false);
           eventBus.$emit('credentials-submitted',this.form);
         } else {
-          console.log("Please enter both a username and password");
+          this.errorMessage="Please enter both a username and password";
         }
       },
       submitNewPlayer: function () {
@@ -64,10 +66,10 @@ export default {
             .then( res => eventBus.$emit('credentials-submitted', this.form))
             .then( res => eventBus.$emit('show-pop-up',false))
           } else {
-            console.log("You've not copied your password correctly, please try again");
+            this.errorMessage = "You've not copied your password correctly, please try again";
           }
         } else {
-          console.log("You must enter a username and password");
+          this.errorMessage = "You must enter a username and password";
         }
       },
       createPlayer: function(){
@@ -79,6 +81,9 @@ export default {
     },
     components: {
       'pop-up-base': PopupBase
+    },
+    mounted() {
+      eventBus.$on('login-error', (message) => this.errorMessage = message)
     }
 
 }
@@ -87,8 +92,9 @@ export default {
 <style>
 
 .form {
-    background-color: white;
+    background: linear-gradient(to top, #870000, #190a05);
     padding: 20px;
 }
+
 
 </style>

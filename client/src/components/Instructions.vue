@@ -1,5 +1,15 @@
 <template>
   <div id="instructions">
+
+    <div id="play-game-holder" v-if="player">
+      <label for="selectDifficulty">Please Select difficulty</label>
+      <select v-model="difficulty" v-on:change="changeDifficulty">
+        <option value=1>Easy</option>
+        <option value=2>Difficult</option>
+      </select>
+      <button id="button-play"  @click='gameRoute'>Play Game!</button>
+    </div>
+
     <h2>Instructions</h2>
     <h4>Step 1: The Overview</h4>
     <p>
@@ -25,6 +35,7 @@
     <p>
       The game ends when the first person reaches 13 brains. See if you can find all the achievements on your path to victory.
     </p>
+<<<<<<< HEAD
     <div id="play-game-holder">
       <label v-if="player" for="selectDifficulty">Please Select difficulty</label>
       <select v-if="player" v-model="difficulty" v-on:change="changeDifficulty">
@@ -33,6 +44,9 @@
       </select>
       <button id="button-play" v-if="player" @click='gameRoute'>Play Game!</button>
     </div>
+=======
+    
+>>>>>>> d6a2f25a67d8f6f0ee5d48d62f4e8142bd0c510e
     
   </div>
 </template>
@@ -61,6 +75,12 @@ export default {
 <style>
   #instructions {
     margin: 16px;
+  }
+
+  #instructions > p {
+    text-shadow: none;
+    margin-bottom: 5px;
+    line-height: 1.2;
   }
 
   #button-play {

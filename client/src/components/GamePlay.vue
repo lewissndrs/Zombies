@@ -1,5 +1,5 @@
 <template>
-  <div v-if="player">
+  <div v-if="player" id='game-screen'>
     <button v-if="winner" v-on:click="newGame">Play a New Game</button>
     <h2 v-if="currentRound">Current Round: {{currentRound}}</h2>
     <h3 v-if="winner">The Winner is {{winner.name}}</h3>
@@ -283,12 +283,34 @@ export default {
 </script>
 
 <style>
+
+  #game-screen > h2 {
+    margin: 20px 0;
+    padding: 10px;
+    color: white;
+    background: rgba(255, 255, 255, 0.233);
+
+  }
+
+  #game-screen {
+    font-size: 20px;
+    text-shadow: none;
+  }
+
   .AIs {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    margin: 20px;
   }
 
+  .playerDisplay {
+    background: rgba(255, 255, 255, 0.233);
+    padding: 15px;
+  }
 
+  .playerDisplay > button {
+    font-size: 16px;
+  }
 
 
   .dice {
