@@ -91,7 +91,7 @@ export default {
 
 #app {
   font-family: 'Syne mono', monospace;
-  background-image: linear-gradient(rgb(214, 214, 214), rgb(122, 122, 122)), url("https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2020/10/CoD-Halloween-Warzone-796x417.jpg");
+  background-image: linear-gradient(rgb(168, 167, 167), rgb(102, 101, 101)), url("https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2020/10/CoD-Halloween-Warzone-796x417.jpg");
   background-blend-mode: multiply;
   background-repeat: no-repeat;
   background-size: cover;
@@ -142,7 +142,7 @@ h1 {
 
 input, button {
     background: transparent;
-    border: 1px solid greenyellow;
+    border: 1px solid #adff2f;
     color: greenyellow;
     padding: 2px;
     margin: 2px;

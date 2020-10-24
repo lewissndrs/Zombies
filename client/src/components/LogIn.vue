@@ -45,7 +45,7 @@ export default {
       const index = this.players.findIndex( (player) => player.name === form.username );
       
       if (index === -1) {
-        console.log('USER DOES NOT EXIST')
+        eventBus.$emit('login-error','username not found') 
         this.showPopup = true
       } else {
         if (form.password === this.players[index].password) {
@@ -54,7 +54,7 @@ export default {
             eventBus.$emit('player-logged', this.loggedplayer)
             PlayersService.updatePlayer({log_in:true}, this.loggedplayer._id)
         } else {
-            console.log('PASSWORD DOES NOT MATCH')
+            eventBus.$emit('login-error','password does not match username')
             this.showPopup = true
         }
       }
