@@ -1,8 +1,9 @@
 <template>
   <div id='log-in'>
-        <a @click.prevent='showPopup = true' v-if="loggedIn === false" href="">Log in/register</a>
-        <p v-if="loggedIn ===true">{{player.name}} <a @click.prevent='logOut'>Log out</a></p>
-        
+        <a @click.prevent='showPopup = true' v-if="loggedIn === false" href="" class="anchor">Log in/register</a>
+        <p v-if="loggedIn ===true">Hello {{player.name}}</p>
+        <p v-if="loggedIn ===true" @click.prevent='logOut' class="anchor">Log out</p>
+
         <log-in-popup
         v-if="showPopup">
         
@@ -13,45 +14,60 @@
 <script>
 import LogInPopup from '@/components/LogInPopup.vue';
 import {eventBus} from '@/main.js';
+import PlayersService from '@/services/PlayersService.js';
 export default {
     name: 'log-in',
-    props: ['players'],
+    props: ['players', 'player'],
     components: {
         'log-in-popup': LogInPopup
     },
     data() {
         return {
             loggedIn: false,
-            player: null,
-            showPopup: false
+            showPopup: false,
+            loggedplayer: null
         }
     },
     mounted(){
+        eventBus.$on('show-pop-up', (message) => {this.showPopup = message} )
         eventBus.$on('credentials-submitted',(form) => {
             this.logIn(form);
-        }),
-        eventBus.$on('show-pop-up', (message) => {this.showPopup = message} )
+        })
+        eventBus.$on('existing-log', (player) => {
+            this.loggedIn = true
+            this.loggedplayer = player
+        })
+        
     },
     methods: {
     logIn: function(form) {
 
-    const index = this.players.findIndex( (player) => player.name === form.username );
-    
-    if (index === -1) {
-        return console.log('USER DOES NOT EXIST')
-    } else {
+      const index = this.players.findIndex( (player) => player.name === form.username );
+      
+      if (index === -1) {
+        console.log('USER DOES NOT EXIST')
+        this.showPopup = true
+      } else {
         if (form.password === this.players[index].password) {
-            this.player = this.players[index]
+            this.loggedplayer = this.players[index]
+            this.loggedIn = true;
+            eventBus.$emit('player-logged', this.loggedplayer)
+            PlayersService.updatePlayer({log_in:true}, this.loggedplayer._id)
         } else {
-            return console.log('PASSWORD DOES NOT MATCH')
+            console.log('PASSWORD DOES NOT MATCH')
+            this.showPopup = true
         }
+      }
+    },
+    logOut: function() {
+      PlayersService.updatePlayer({log_in:false}, this.loggedplayer._id)
+      .then(() => {
+        eventBus.$emit('player-logged', null)
+        this.loggedplayer = null;
+        this.loggedIn = false;
+      })
+      
     }
-      this.loggedIn = true;
-     },
-     logOut: function() {
-         this.player = null;
-         this.loggedIn = false;
-     }
     }
 }
 </script>

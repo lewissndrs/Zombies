@@ -1,21 +1,57 @@
 <template>
   <div id='leaderboard' v-if="players">
-      OOH I'm A LEADERBOARD
-      <button v-on:click="displayLeaderBoard">Show Leader Board</button> 
-      <h3 v-for="(player, index) in leaderBoard" :key="index"> Name: {{ player.name }}  Games Won: {{ player.achievements.gamesWon }}</h3>
+      <button v-on:click="displayLeaderBoard" v-if="!topPlayers">Show Leader Board</button> 
+      <button v-on:click="displayStats" v-if="topPlayers">Show My Stats</button>
+      <table class="leaderboard-table" v-if="topPlayers">
+        <tr v-if="topPlayers">
+          <th>Name</th>
+          <th>Wins</th>
+          <th>Total Brains</th>
+        </tr>
+        <tr v-for="(player, index) in leaderBoard" :key="index" :class="[index===0 && player===currentPlayer ? 'firstplaceme' : 'notfirstplaceme', player===currentPlayer ? 'itsme' : 'itsnotme', index===0 ? 'firstplace' : 'notfirstplace']">
+          <td>{{player.name}}</td>
+          <td class="incenter">{{player.achievements.gamesWon}}</td>
+          <td class="incenter">{{player.achievements.totalPoints}}</td>
+        </tr>
+      </table>
+      <div id="myStats" v-if="!topPlayers && currentPlayer">
+        <h2>{{currentPlayer.name}}</h2>
+        <tr>
+          <td>Games Played: </td>
+          <th>{{currentPlayer.achievements.gamesPlayed}}</th>
+        </tr>
+        <tr>
+          <td>Games Won: </td>
+          <th>{{currentPlayer.achievements.gamesWon}}</th>
+        </tr>
+        <tr>
+          <td>Total Brains: </td>
+          <th>{{currentPlayer.achievements.totalPoints}}</th>
+        </tr>
+        <tr>
+          <td>Total Rolls: </td>
+          <th>{{currentPlayer.achievements.totalRolls}}</th>
+        </tr>
+        <tr>
+          <td>Win Percentage: </td>
+          <th>{{100*currentPlayer.achievements.gamesWon/currentPlayer.achievements.gamesPlayed}}&#37</th>
+        </tr>
+        <h4>Medals:</h4>
+        
+      </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'leader-board',
-  props: ['players'],
+  props: ['players', 'currentPlayer'],
   data() {
     return {
-      leaderBoard: []
+      leaderBoard: [],
+      topPlayers: false
     }
   },
-
   methods: {
     displayLeaderBoard() {
       let maximum = this.players[0].achievements.gamesWon;
@@ -24,12 +60,57 @@ export default {
         return b.achievements.gamesWon - a.achievements.gamesWon
       })
       this.leaderBoard = array  
-      return this.leaderBoard
+      this.topPlayers = true
+    },
+    displayStats(){
+      this.topPlayers = false
     }
   }
 }
 </script>
 
 <style>
+  #leaderboard {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+  }
+  
+  .leaderboard-table {
+    font-size: 24px;
+  }
 
+  .incenter {
+    text-align: center;
+  }
+
+  #myStats > h2 {
+    font-size: 48px;
+  }
+
+  #myStats > h4 {
+    font-size: 32px;
+  }
+
+  #myStats > tr {
+    font-size: 24px;
+  }
+
+  #myStats > tr > th {
+    padding: 10px 20px;
+  }
+
+  .itsme {
+    background-color: greenyellow;
+  }
+
+  .firstplace {
+    background-color: yellow;
+  }
+
+  .firstplaceme {
+    background-color: red;
+  }
+
+  
 </style>

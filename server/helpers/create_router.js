@@ -14,7 +14,7 @@ const createRouter = function(collection){
         })
     });
 
-    router.get('/:id', (req, res) => {
+    router.get('/id/:id', (req, res) => {
         const id = ObjectID(req.params.id)
         collection.findOne({_id: id})
         .then((doc) => res.json(doc))
@@ -45,6 +45,17 @@ const createRouter = function(collection){
             {returnOriginal: false}
         )
         .then((result) => res.json(result.value))
+        .catch((err) => {
+            console.error(err);
+            res.status(500);
+            res.json({status: 500, error: error});
+        });
+    });
+
+    router.get('/log', (req, res) => {
+        console.log("I'm Getting this far");
+        collection.findOne({log_in: true})
+        .then((doc) => res.json(doc))
         .catch((err) => {
             console.error(err);
             res.status(500);

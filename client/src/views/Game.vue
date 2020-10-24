@@ -1,7 +1,6 @@
 <template>
   <div id='game'>
-      OOH HEY LOOK THERE'S A BIG OL GAME HERE
-      <game-play :player="player"></game-play>
+      <game-play :player="player" :difficulty="difficulty"></game-play>
   </div>
 </template>
 
@@ -13,7 +12,7 @@ export default {
   components: {
     'game-play': GamePlay
   },
-  props:['player']
+  props:['player', 'difficulty']
 
 }
 </script>

@@ -42,13 +42,13 @@ export default {
     }
     return [results, dice_left, dice_rolls]
   },
-  aITurn(aIscore){
+  aITurn(aIscore, difficulty){
     let dice = ["red", "red", "red", "yellow", "yellow", "yellow", "yellow", "yellow", "green", "green", "green", "green", "green", "green", "green"]
     let current_scores = [[], []]
     let current_dice = []
     let rolls = []
   
-    while (current_scores[1].length < 2 && dice.length > 2 && (aIscore+current_scores[0].length) < 13){
+    while (current_scores[1].length < difficulty && dice.length > 2 && (aIscore+current_scores[0].length) < 13){
       let data = this.takeShot(dice, current_dice)
       for (let brain of data[0][0]){
         current_scores[0].push(brain)

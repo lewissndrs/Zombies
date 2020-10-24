@@ -22,5 +22,10 @@ export default {
       headers: { 'Content-type': 'application/json'}
     })
     .then((res) => res.json())
+  },
+
+  checkForLoggedIn(){
+    return fetch(baseURL + "log")
+    .then(res => res.json())
   }
 }

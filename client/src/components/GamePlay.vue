@@ -8,18 +8,15 @@
       <ai-display v-for="(aI, index) of aIs" :key="index" :aI="aI" :currentRound="currentRound"></ai-display>
     </div>
 
-    
-    
-
     <div class="playerDisplay">
       <h3>Player: {{player.name}}</h3>
       <p>Total Brains: {{playerBrains}}</p>
-      <p v-if="!died">This Round: {{playerBrainsRound.length}}</p>
-      <p v-if="died">This Round: <b>You Died</b></p>
-      <p>Brains: <main v-for="(brain, index) of playerBrainsRound" :key="index">{{brain}}</main></p>
-      <p>Shots: <main v-for="(shot, index) of playerShotsRound" :key="index">{{shot}}</main></p>
+      <p v-if="!died">Brains: {{playerBrainsRound.length}}<main v-for="(brain, index) of playerBrainsRound" :key="index">{{brain}}</main></p>
+      <p v-if="died">Brains: <b>You Died</b><main v-for="(brain, index) of playerBrainsRound" :key="index">{{brain}}</main></p>
+      <p>Shots: {{playerShotsRound.length}}<main v-for="(shot, index) of playerShotsRound" :key="index">{{shot}}</main></p>
       <p>You're holding onto: <main v-for="(dice, index) of currentDice" :key="index">{{dice}}</main></p>
       <p>Previous Roll: <main v-for="(dice, index) of diceRolled" :key="index">{{dice}}</main></p>
+      <button v-if="!currentPlayer" @click="startGame">Start Game</button>
       <button v-if="currentPlayer===player && !takingTurn" v-on:click="startTurn">Start Turn</button>
       <button v-if="takingTurn" v-on:click="rollDice">Roll Dice</button>
       <button v-if="takingTurn" v-on:click="endTurn">End Turn</button>
@@ -31,26 +28,29 @@
 <script>
 import AIDisplay from './AIDisplay.vue'
 import GamesService from '@/services/GamesService'
+import PlayersService from '@/services/PlayersService.js';
+import {eventBus} from '@/main.js';
 
 export default {
   name: 'game-play',
-  props:['player'],
+  props:['player', 'difficulty'],
   data(){
     return {
       currentRound: null,
+      allAIs:["Viper", "Casper", "Mad Max", "George", "Bobert", "Josephine", "Mary", "Cobra"],
       aIs:[
         {
-          name:"Viper",
+          name:"",
           brains:0,
           lastRound:[]
         },
         {
-          name:"Mad Max",
+          name:"",
           brains:0,
           lastRound:[]
         },
         {
-          name:"Caspar",
+          name:"",
           brains:0,
           lastRound:[]
         }
@@ -58,6 +58,7 @@ export default {
       playerBrains: 0,
       playerBrainsRound: [],
       playerShotsRound: [],
+      playerRolls: 0,
       players: [],
       allDice: ["red", "red", "red", "yellow", "yellow", "yellow", "yellow", "yellow", "green", "green", "green", "green", "green", "green", "green"],
       diceRemaining: ["red", "red", "red", "yellow", "yellow", "yellow", "yellow", "yellow", "green", "green", "green", "green", "green", "green", "green"],
@@ -75,6 +76,7 @@ export default {
       this.winner = null
       this.currentRound = 1
       this.players = GamesService.shuffle([this.player, this.aIs[0], this.aIs[1], this.aIs[2]])
+      this.players.push("new round")
       this.currentPlayer = this.players[0]
       if (this.currentPlayer != this.player){this.playAI()}
     },
@@ -87,6 +89,7 @@ export default {
       this.rollDice()
     },
     rollDice(){
+      this.playerRolls ++
       let data = GamesService.takeShot(this.diceRemaining, this.currentDice)
       this.diceRolled = data[2]
       for (let brain of data[0][0]){
@@ -113,7 +116,7 @@ export default {
       }
       if (this.playerBrains > 12){
         this.winner = this.currentPlayer
-        this.currentPlayer = null
+        eventBus.$emit('game-played', [this.playerRolls, this.playerBrains, true])
       } else {
         this.players.push(this.players.shift())
         this.currentPlayer = this.players[0]
@@ -122,15 +125,21 @@ export default {
     },
     playAI(){
       while (this.currentPlayer != this.player && !this.winner){
-        let data = GamesService.aITurn(this.currentPlayer.brains)
-        this.currentPlayer.brains += data[0]
-        this.currentPlayer.lastRound = data[1]
-        if (this.currentPlayer.brains > 12){
-          this.winner = this.currentPlayer
-          this.currentPlayer = null
-        } else {
+        if (this.currentPlayer === "new round"){
+          this.currentRound ++
           this.players.push(this.players.shift())
           this.currentPlayer = this.players[0]
+        } else {
+          let data = GamesService.aITurn(this.currentPlayer.brains, this.difficulty)
+          this.currentPlayer.brains += data[0]
+          this.currentPlayer.lastRound = data[1]
+          if (this.currentPlayer.brains > 12){
+            this.winner = this.currentPlayer
+            eventBus.$emit('game-played', [this.playerRolls, this.playerBrains, false])
+          } else {
+            this.players.push(this.players.shift())
+            this.currentPlayer = this.players[0]
+          }
         }
       }
     },
@@ -138,11 +147,14 @@ export default {
       window.location.reload()
     }
   },
-  mounted(){
-    this.startGame()
-  },
   components: {
     'ai-display': AIDisplay
+  },
+  mounted(){
+    let list = GamesService.shuffle(this.allAIs)
+    this.aIs[0].name = list[0]
+    this.aIs[1].name = list[1]
+    this.aIs[2].name = list[2]
   }
 }
 
