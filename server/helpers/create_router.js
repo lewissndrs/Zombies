@@ -53,7 +53,6 @@ const createRouter = function(collection){
     });
 
     router.get('/log', (req, res) => {
-        console.log("I'm Getting this far");
         collection.findOne({log_in: true})
         .then((doc) => res.json(doc))
         .catch((err) => {
