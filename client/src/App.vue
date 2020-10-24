@@ -1,5 +1,6 @@
 <template>
   <div id='app'>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500&family=Baloo+Tammudu+2:wght@500&display=swap" rel="stylesheet">
     <header>
       <hgroup>
         <router-link :to='{ name: "home"}' class="anchor">
@@ -83,6 +84,11 @@ export default {
 
 <style>
 
+#app {
+  font-family: 'Baloo Da 2', cursive;
+
+}
+
 header {
   display: flex;
   justify-content: space-between;
@@ -96,6 +102,7 @@ footer {
   font-size: 32px;
   background-color: darkred;
   color: white;
+  margin-top: 8%;
 }
 
 .column-filler {

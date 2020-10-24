@@ -10,12 +10,12 @@
 
     <div class="playerDisplay">
       <h3>Player: {{player.name}}</h3>
-      <p>Total Brains: {{playerBrains}}</p>
-      <p v-if="!died">Brains: {{playerBrainsRound.length}}<main v-for="(brain, index) of playerBrainsRound" :key="index">{{brain}}</main></p>
-      <p v-if="died">Brains: <b>You Died</b><main v-for="(brain, index) of playerBrainsRound" :key="index">{{brain}}</main></p>
-      <p>Shots: {{playerShotsRound.length}}<main v-for="(shot, index) of playerShotsRound" :key="index">{{shot}}</main></p>
+      <p>Total Brains &#129504;: {{playerBrains}}</p>
+      <p v-if="!died">Brains &#129504;: {{playerBrainsRound.length}}<main v-for="(brain, index) of playerBrainsRound" :key="index">{{brain}}</main></p>
+      <p v-if="died">Brains &#128165;: <b>You Died</b><main v-for="(brain, index) of playerBrainsRound" :key="index">{{brain}}</main></p>
+      <p>Shots &#128165;: {{playerShotsRound.length}}<main v-for="(shot, index) of playerShotsRound" :key="index">{{shot}}</main></p>
       <p>You're holding onto: <main v-for="(dice, index) of currentDice" :key="index">{{dice}}</main></p>
-      <p>Previous Roll: <main v-for="(dice, index) of diceRolled" :key="index">{{dice}}</main></p>
+      <p>Previous Roll &#127922;: <main v-for="(dice, index) of diceRolled" :key="index">{{dice}}</main></p>
       <button v-if="!currentPlayer" @click="startGame">Start Game</button>
       <button v-if="currentPlayer===player && !takingTurn" v-on:click="startTurn">Start Turn</button>
       <button v-if="takingTurn" v-on:click="rollDice">Roll Dice</button>
@@ -165,4 +165,6 @@ export default {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
   }
+
+  
 </style>

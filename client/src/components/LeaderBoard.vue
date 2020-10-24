@@ -34,10 +34,30 @@
         </tr>
         <tr>
           <td>Win Percentage: </td>
-          <th>{{100*currentPlayer.achievements.gamesWon/currentPlayer.achievements.gamesPlayed}}&#37</th>
+          <th>{{Math.round((100*currentPlayer.achievements.gamesWon/currentPlayer.achievements.gamesPlayed), 2)}}&#37</th>
         </tr>
         <h4>Medals:</h4>
-        
+          <div v-if="currentPlayer.achievements.gamesWon > 50">
+              <h2>Grand Master Status 	&#128081; (More than 50 games won)</h2>
+          </div>
+          <div v-if="currentPlayer.achievements.totalPoints >= 100 && currentPlayer.achievements.totalPoints < 499">
+              <h2> Brain Eater &#129504; (More than 100 brains collected)</h2>
+          </div>
+          <div v-if="currentPlayer.achievements.totalPoints >= 500 && currentPlayer.achievements.totalPoints < 4999">
+            <h2> Zombie Commander &#129504; (More than 500 brains collected)</h2>
+          </div>
+          <div v-if="currentPlayer.achievements.totalPoints >= 5000">
+            <h2> Zombie King &#129504; (More than 5000 brains collected)</h2>
+          </div>
+          <div v-if="currentPlayer.achievements.totalRolls >= 100 && currentPlayer.achievements.totalRolls < 499">
+            <h2> ZombLand Newb 	&#129352; (More than 100 die rolls)</h2>
+          </div>
+           <div v-if="currentPlayer.achievements.totalRolls >= 500 && currentPlayer.achievements.totalRolls < 5000">
+            <h2> ZombLand Citizen 		&#127894; (More than 500 die rolls)</h2>
+          </div>
+          <div v-if="currentPlayer.achievements.totalRolls >= 5000">
+            <h2> ZombLand Elite &#129351; (More than 5000 die rolls)</h2>
+          </div>
       </div>
   </div>
 </template>
