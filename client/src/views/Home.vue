@@ -27,6 +27,7 @@ export default {
   #home {
     display: grid;
     grid-template-columns: 1fr 140fr 1fr 70fr 1fr;
+    
   }
 
   

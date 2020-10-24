@@ -86,7 +86,10 @@ export default {
 
 #app {
   font-family: 'Baloo Da 2', cursive;
-
+  background-image: url("https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2020/10/CoD-Halloween-Warzone-796x417.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% 90%;
+  color: yellowgreen;
 }
 
 header {
@@ -102,7 +105,7 @@ footer {
   font-size: 32px;
   background-color: darkred;
   color: white;
-  margin-top: 8%;
+  margin-top: 12%;
 }
 
 .column-filler {
