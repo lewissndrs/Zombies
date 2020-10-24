@@ -1,6 +1,5 @@
 <template>
   <div id='app'>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500&family=Baloo+Tammudu+2:wght@500&display=swap" rel="stylesheet">
     <header>
       <hgroup>
         <router-link :to='{ name: "home"}' class="anchor">
@@ -84,41 +83,49 @@ export default {
 
 <style>
 
+@import url('https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap');
+
+* {
+  margin: 0;
+}
+
 #app {
-  font-family: 'Baloo Da 2', cursive;
-  background-image: url("https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2020/10/CoD-Halloween-Warzone-796x417.jpg");
+  font-family: 'Syne mono', monospace;
+  background-image: linear-gradient(rgb(214, 214, 214), rgb(122, 122, 122)), url("https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2020/10/CoD-Halloween-Warzone-796x417.jpg");
+  background-blend-mode: multiply;
   background-repeat: no-repeat;
-  background-size: 100% 90%;
+  background-size: cover;
+  background-position: 65% 35%;
   color: yellowgreen;
+  text-shadow: darkseagreen 1px 0 3px;
 }
 
 header {
   display: flex;
   justify-content: space-between;
-  background-color: darkred;
-  color: white;
+  background: linear-gradient(to top, #870000, #190a05);
+  color: yellowgreen;
   padding: 20px 50px 20px 100px;
 }
 footer {
   display: flex;
   justify-content: center;
   font-size: 32px;
-  background-color: darkred;
+  background-color: #870000;
   color: white;
-  margin-top: 12%;
+  margin-top: 10%;
 }
 
 .column-filler {
-  background-color: darkred;
+  background-color: #870000;
 }
 
 .routers {
-  height: 780px;
   margin: 0 20px;
 }
 
 .anchor {
-  color: white;
+  color: yellowgreen;
   text-decoration: underline yellow;
   cursor: pointer;
 }
@@ -131,6 +138,20 @@ footer {
 
 h1 {
   color: white;
+}
+
+input, button {
+    background: transparent;
+    border: 1px solid greenyellow;
+    color: greenyellow;
+    padding: 2px;
+    margin: 2px;
+    font-family: 'Syne Mono',monospace;
+}
+
+button:hover {
+  background: greenyellow;
+  color: #870000
 }
 
 

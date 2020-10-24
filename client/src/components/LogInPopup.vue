@@ -87,8 +87,9 @@ export default {
 <style>
 
 .form {
-    background-color: white;
+    background: linear-gradient(to top, #870000, #190a05);
     padding: 20px;
 }
+
 
 </style>
