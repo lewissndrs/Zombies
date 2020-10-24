@@ -94,7 +94,7 @@ export default {
   background-image: linear-gradient(rgb(168, 167, 167), rgb(102, 101, 101)), url("https://cdn0.tnwcdn.com/wp-content/blogs.dir/1/files/2020/10/CoD-Halloween-Warzone-796x417.jpg");
   background-blend-mode: multiply;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 185%;
   background-position: 65% 35%;
   color: yellowgreen;
   text-shadow: darkseagreen 1px 0 3px;
@@ -154,6 +154,15 @@ button:hover {
   color: #870000
 }
 
+@media only screen and (max-width: 850px) {
+  
+  #app {
+  background: #3C3B3F;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #605C3C, #3C3B3F);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #605C3C, #3C3B3F); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+
+}
 
 
 </style>
