@@ -122,6 +122,7 @@ footer {
 
 .routers {
   margin: 0 20px;
+  min-height: 670px;
 }
 
 .anchor {

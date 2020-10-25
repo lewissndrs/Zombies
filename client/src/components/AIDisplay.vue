@@ -3,9 +3,14 @@
     <h3>Name: {{aI.name}}</h3>
     <p v-if="aI.inRound === currentRound">Turn Complete</p>
     <p>Brains: {{aI.brains}}</p>
-      <div class="last-round-display">
+      <div class="last-round">
         <p>Last Round:</p>
-        <last-round-icon v-for="(icon,index) in lastRoundArray" :key='index' :icon='icon' class="last-round-icon"></last-round-icon>
+        <div v-if="!aI.died">
+          <p v-for="(roll, index) in aI.lastRound" :key="index" class="last-round-display">
+            <last-round-icon v-for="(icon,index) in roll" :key='index' :icon='icon' class="last-round-icon"></last-round-icon>
+          </p>
+        </div>
+        <div v-if="aI.died"><b>&#128165;&#128165;&#128165;</b></div>
       </div>
   </div>
 </template>
@@ -37,9 +42,12 @@ export default {
   align-self: flex-start;
 }
 
+.last-round {
+  display: flex;
+}
+
 .last-round-display {
   display: flex;
-  flex-wrap: wrap;
 }
 
 .last-round-icon {

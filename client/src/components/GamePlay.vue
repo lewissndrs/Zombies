@@ -11,19 +11,37 @@
     <div class="playerDisplay">
       <h3>Player: {{player.name}}</h3>
       <p>Total Brains &#129504;: {{playerBrains}}</p>
-      <p v-if="!died">Brains &#129504;: {{playerBrainsRound.length}}<main v-for="(brain, index) of playerBrainsRound" :key="index">{{brain}}</main></p>
-      <p v-if="died">Brains &#128165;: <b>You Died</b><main v-for="(brain, index) of playerBrainsRound" :key="index">{{brain}}</main></p>
-      <p>Shots &#128165;: {{playerShotsRound.length}}<main v-for="(shot, index) of playerShotsRound" :key="index">{{shot}}</main></p>
-      <p>You're holding onto: <main v-for="(dice, index) of currentDice" :key="index">{{dice}}</main></p>
-      <p>Previous Roll &#127922;: <main v-for="(dice, index) of diceRolled" :key="index">{{dice}}</main></p>
+      <div v-if="!died">Brains &#129504;: {{playerBrainsRound.length}}
+        <p class="icon-list">
+          <main v-for="(brain, index) of playerBrainsRound" :key="index">
+            <img v-if="brain==='green'" src="@/assets/green-Brain.jpg" height="40px" width="40px">
+            <img v-if="brain==='yellow'" src="@/assets/yellow-Brain.jpg" height="40px" width="40px">
+            <img v-if="brain==='red'" src="@/assets/red-Brain.jpg" height="40px" width="40px">
+          </main>
+        </p>
+      </div>
+      <div v-if="died">Brains &#128165;: <b>You Died</b></div>
+      <div>Shots &#128165;: {{playerShotsRound.length}}
+        <p class="icon-list">
+          <main v-for="(shot, index) of playerShotsRound" :key="index">
+            <img v-if="shot==='green'" src="@/assets/green-Shot.jpg" height="40px" width="40px">
+            <img v-if="shot==='yellow'" src="@/assets/yellow-Shot.jpg" height="40px" width="40px">
+            <img v-if="shot==='red'" src="@/assets/red-Shot.jpg" height="40px" width="40px">
+          </main>
+        </p>
+      </div>
       <button v-if="!currentPlayer" @click="startGame">Start Game</button>
       <button v-if="currentPlayer===player && !takingTurn" v-on:click="startTurn">Start Turn</button>
-      <button v-if="takingTurn" v-on:click="rollDice">Roll Dice</button>
+      <button v-if="takingTurn && !diceRolling" v-on:click="rollDice">Roll Dice</button>
       <!-- <button v-if="takingTurn" v-on:click="diceRoll">Roll Dice</button> -->
-      <button v-if="takingTurn" v-on:click="endTurn">End Turn</button>
+      <button v-if="takingTurn && !diceRolling" v-on:click="endTurn">End Turn</button>
     </div>
     <div class="dice">
-      <ol class="die-list even-roll" data-roll="1" id="die-1">
+      <dice :colour="diceColours[0]" roll="even-roll" id="die-1"></dice>
+      <dice :colour="diceColours[1]" roll="even-roll" id="die-2"></dice>
+      <dice :colour="diceColours[2]" roll="even-roll" id="die-3"></dice>
+    
+      <!-- <ol class="die-list even-roll" :class="{ 'red':diceNumbers[0]==='red'}" data-roll="1" id="die-1">
         <li class="die-item" data-side="1">
           <span class="dot"></span>
         </li>
@@ -127,7 +145,7 @@
           <span class="dot"></span>
           <span class="dot"></span>
         </li>
-      </ol>
+      </ol> -->
     </div>
   </div>
 
@@ -139,6 +157,9 @@ import AIDisplay from './AIDisplay.vue'
 import GamesService from '@/services/GamesService'
 import PlayersService from '@/services/PlayersService.js';
 import {eventBus} from '@/main.js';
+import Dice from './Dice.vue';
+import YellowDice from './YellowDice.vue';
+import RedDice from './RedDice.vue';
 
 export default {
   name: 'game-play',
@@ -151,17 +172,20 @@ export default {
         {
           name:"",
           brains:0,
-          lastRound:[]
+          lastRound:[],
+          died:false
         },
         {
           name:"",
           brains:0,
-          lastRound:[]
+          lastRound:[],
+          died:false
         },
         {
           name:"",
           brains:0,
-          lastRound:[]
+          lastRound:[],
+          died:false
         }
       ],
       playerBrains: 0,
@@ -173,9 +197,12 @@ export default {
       diceRemaining: ["red", "red", "red", "yellow", "yellow", "yellow", "yellow", "yellow", "green", "green", "green", "green", "green", "green", "green"],
       currentDice:[],
       diceRolled:[],
+      diceNumbers: [0, 0, 0],
+      diceColours:['yellow', 'yellow', 'yellow'],
       currentPlayer: null,
       takingTurn:false,
       died: false,
+      diceRolling: false,
       winner: null
 
     }
@@ -198,32 +225,44 @@ export default {
       this.rollDice()
     },
     rollDice(){
-      this.playerRolls ++
+      this.diceRolling = true
       let data = GamesService.takeShot(this.diceRemaining, this.currentDice)
-      this.diceRolled = data[2]
-      for (let brain of data[0][0]){
-        this.playerBrainsRound.push(brain)
-      }
-      for (let shot of data[0][2]){
-        this.playerShotsRound.push(shot)
-      }
-      this.currentDice = data[0][1]
-      this.diceRemaining = data[1]
-      if (this.playerShotsRound.length > 2){
-        this.died = true
-        this.endTurn(true)
-      }
-      if (this.diceRemaining < 3){
-        this.endTurn()
-      }
-
+      this.diceColours = data[4]
+      this.diceNumbers = data[3]
       // code for rolling the dice
       const dies = [...document.querySelectorAll(".die-list")];
       dies.forEach(die => {
+        let index = dies.indexOf(die)
         this.toggleClasses(die);
-        die.dataset.roll = 4
+        die.dataset.roll = this.diceNumbers[index]
           
       });
+      this.playerRolls ++
+      setTimeout(()=>{
+        this.diceRolled = data[2]
+        
+        
+        for (let brain of data[0][0]){
+          this.playerBrainsRound.push(brain)
+        }
+        for (let shot of data[0][2]){
+          this.playerShotsRound.push(shot)
+        }
+        this.currentDice = data[0][1]
+        this.diceRemaining = data[1]
+        if (this.playerShotsRound.length > 2){
+          this.died = true
+          this.endTurn(true)
+        }
+        if (this.diceRemaining < 3){
+          this.endTurn()
+        }
+        this.diceRolling = false
+      },1500)
+      
+      
+
+      
     },
 
   toggleClasses(die) {
@@ -253,7 +292,12 @@ export default {
           this.currentPlayer = this.players[0]
         } else {
           let data = GamesService.aITurn(this.currentPlayer.brains, this.difficulty)
-          this.currentPlayer.brains += data[0]
+          this.currentPlayer.died = false
+          if (data[0] === 'died'){
+            this.currentPlayer.died = true
+          } else {
+            this.currentPlayer.brains += data[0].length
+          }
           this.currentPlayer.lastRound = data[1]
           if (this.currentPlayer.brains > 12){
             this.winner = this.currentPlayer
@@ -270,7 +314,10 @@ export default {
     }
   },
   components: {
-    'ai-display': AIDisplay
+    'ai-display': AIDisplay,
+    'dice':Dice,
+    'yellow-dice':YellowDice,
+    'red-dice':RedDice
   },
   mounted(){
     let list = GamesService.shuffle(this.allAIs)
@@ -312,16 +359,20 @@ export default {
     font-size: 16px;
   }
 
+  .icon-list {
+    display: flex;
+  }
+
 
   .dice {
   align-items: center;
   display: flex;
-  grid-gap: 2rem;
+  grid-gap: 7rem;
   grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
   grid-template-rows: auto;
   justify-items: center;
   padding: 2rem;
-  perspective: 600px;
+  perspective: 800px;
 }
 .die-list {
   display: grid;
@@ -338,8 +389,8 @@ export default {
 .odd-roll {
   transition: transform 1.25s ease-out;
 }
-.die-item {
-  background-color: #fefefe;
+/* .die-item {
+  background-color: yellow;
   box-shadow: inset -0.35rem 0.35rem 0.75rem rgba(0, 0, 0, 0.3),
     inset 0.5rem -0.25rem 0.5rem rgba(0, 0, 0, 0.15);
   display: grid;
@@ -354,8 +405,8 @@ export default {
   height: 100%;
   padding: 1rem;
   width: 100%;
-}
-.dot {
+} */
+/* .dot {
   align-self: center;
   background-color: #676767;
   border-radius: 50%;
@@ -364,6 +415,20 @@ export default {
   height: 1.25rem;
   justify-self: center;
   width: 1.25rem;
+} */
+.die-item {
+  height: 100%;
+  width: 100%;
+}
+.die-icon-item {
+  box-shadow: inset -0.35rem 0.35rem 0.75rem rgba(0, 0, 0, 0.3),
+    inset 0.5rem -0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+  display: grid;
+  grid-column: 1;
+  grid-row: 1;
+  height: 100%;
+  padding: 1rem;
+  width: 100%;
 }
 .even-roll[data-roll="1"] {
   transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg);
@@ -487,6 +552,19 @@ export default {
   display: flex;
   justify-content: space-evenly;
 }
+
+.red {
+  background-color: red;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.green {
+  background-color: green;
+}
+
 
 
   

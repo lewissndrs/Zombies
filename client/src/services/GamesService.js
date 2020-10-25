@@ -14,6 +14,7 @@ export default {
   takeShot(dice_left, current_dice=[]){
     let results = [[], [], []]
     let dice_rolls = []
+    let dice_numbers = []
     while (current_dice.length < 3){
       let dice_no = Math.floor(Math.random()*dice_left.length)
       let dice = dice_left.splice(dice_no, 1)
@@ -39,8 +40,9 @@ export default {
         results[2].push(dice)
         dice_rolls.push(`${dice}-Shot`)
       }
+      dice_numbers.push(number+1)
     }
-    return [results, dice_left, dice_rolls]
+    return [results, dice_left, dice_rolls, dice_numbers, current_dice]
   },
   aITurn(aIscore, difficulty){
     let dice = ["red", "red", "red", "yellow", "yellow", "yellow", "yellow", "yellow", "green", "green", "green", "green", "green", "green", "green"]
@@ -60,7 +62,10 @@ export default {
       dice = data[1]
       rolls.push(data[2])
     }
+    if (current_scores[1].length > 2){
+      current_scores[0] = "died"
+    }
   
-    return [current_scores[0].length, rolls]
+    return [current_scores[0], rolls]
   }
 }
