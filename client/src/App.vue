@@ -15,6 +15,7 @@
     <router-view :player="player" :players="players" class="routers" :difficulty="difficulty"></router-view>
     
     <PortalTarget name="login"/>
+    <PortalTarget name="winner"/>
 
     <footer>&#169 CLM.games</footer>
 

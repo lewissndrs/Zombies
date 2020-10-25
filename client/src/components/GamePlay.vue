@@ -12,6 +12,8 @@
 
     <h1 v-if="winner" style="color: yellowgreen">The Winner is {{winner.name}}</h1>
 
+    <winner-pop-up v-if="showPopUp" :winner="winner" />
+
     <div class="AIs">
       <ai-display v-for="(aI, index) of aIs" :key="index" :aI="aI" :currentRound="currentRound"></ai-display>
     </div>
@@ -167,6 +169,7 @@ import {eventBus} from '@/main.js';
 import Dice from './Dice.vue';
 import YellowDice from './YellowDice.vue';
 import RedDice from './RedDice.vue';
+import WinnerPopUp from './WinnerPopUp.vue';
 
 export default {
   name: 'game-play',
@@ -210,7 +213,8 @@ export default {
       takingTurn:false,
       died: false,
       diceRolling: false,
-      winner: null
+      winner: null,
+      showPopUp: false
 
     }
   },
@@ -284,6 +288,7 @@ export default {
       }
       if (this.playerBrains > 12){
         this.winner = this.currentPlayer
+        this.showPopUp = true
         eventBus.$emit('game-played', [this.playerRolls, this.playerBrains, true])
       } else {
         this.players.push(this.players.shift())
@@ -339,13 +344,17 @@ export default {
     'ai-display': AIDisplay,
     'dice':Dice,
     'yellow-dice':YellowDice,
-    'red-dice':RedDice
+    'red-dice':RedDice,
+    'winner-pop-up': WinnerPopUp
   },
   mounted(){
     let list = GamesService.shuffle(this.allAIs)
     this.aIs[0].name = list[0]
     this.aIs[1].name = list[1]
     this.aIs[2].name = list[2]
+
+    eventBus.$on('show-pop-up',(message) => this.showPopUp = message)
+    eventBus.$on('play-new-game', (res) => this.newGame())
   }
 }
 
@@ -392,7 +401,7 @@ export default {
   grid-gap: 7rem;
   grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
   grid-template-rows: auto;
-  justify-items: center;
+  justify-content: center;
   padding: 2rem;
   perspective: 800px;
 }
