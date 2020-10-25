@@ -2,7 +2,15 @@
   <div v-if="player" id='game-screen'>
     <button v-if="winner" v-on:click="newGame">Play a New Game</button>
     <h2 v-if="currentRound">Current Round: {{currentRound}}</h2>
-    <h3 v-if="winner">The Winner is {{winner.name}}</h3>
+    <div id="myModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content" v-if="currentRound">
+        <span class="close">&times;</span>
+      <p>Round {{currentRound}} Begins</p>
+      </div>
+    </div>
+
+    <h1 v-if="winner" style="color: yellowgreen">The Winner is {{winner.name}}</h1>
 
     <div class="AIs">
       <ai-display v-for="(aI, index) of aIs" :key="index" :aI="aI" :currentRound="currentRound"></ai-display>
@@ -20,7 +28,7 @@
           </main>
         </p>
       </div>
-      <div v-if="died">Brains &#128165;: <b>You Died</b></div>
+      <div v-if="died">Brains &#129504;: <b>You Died</b></div>
       <div>Shots &#128165;: {{playerShotsRound.length}}
         <p class="icon-list">
           <main v-for="(shot, index) of playerShotsRound" :key="index">
@@ -33,7 +41,6 @@
       <button v-if="!currentPlayer" @click="startGame">Start Game</button>
       <button v-if="currentPlayer===player && !takingTurn" v-on:click="startTurn">Start Turn</button>
       <button v-if="takingTurn && !diceRolling" v-on:click="rollDice">Roll Dice</button>
-      <!-- <button v-if="takingTurn" v-on:click="diceRoll">Roll Dice</button> -->
       <button v-if="takingTurn && !diceRolling" v-on:click="endTurn">End Turn</button>
     </div>
     <div class="dice">
@@ -286,9 +293,24 @@ export default {
     },
     playAI(){
       while (this.currentPlayer != this.player && !this.winner){
+        
         if (this.currentPlayer === "new round"){
           this.currentRound ++
+
+          // Modal Display
+          let modal = document.getElementById("myModal");
+          modal.style.display = "block";
+          let span = document.getElementsByClassName("close")[0];
           this.players.push(this.players.shift())
+          span.onclick = function() {
+            modal.style.display = "none";
+          }
+          window.onclick = function(event) {
+            if (event.target == modal) {
+            modal.style.display = "none";
+            }
+          }
+          
           this.currentPlayer = this.players[0]
         } else {
           let data = GamesService.aITurn(this.currentPlayer.brains, this.difficulty)
@@ -564,6 +586,48 @@ export default {
 .green {
   background-color: green;
 }
+
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  
+  
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
 
 
 
