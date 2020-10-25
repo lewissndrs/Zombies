@@ -7,7 +7,7 @@
                     <label for="username">Username: </label>
                     <input type="text" name='username' v-model="form.username" required>
                     <label for="password">Password</label>
-                    <input type="text" name='password' v-model="form.password" required>
+                    <input :type="createNew ? 'text' : 'password'" name='password' v-model="form.password" required>
                     <label for="repeatPassword" v-if="createNew">Repeat Password</label>
                     <input type="text" name='repeatPassword' v-model="form.repeatPassword" v-if="createNew">
                     <button v-if="!createNew" type="submit" @click.prevent='submitLogIn'>Log in</button>
@@ -50,21 +50,31 @@ export default {
       submitNewPlayer: function () {
         if (this.form.username && this.form.password && this.form.repeatPassword){
           if (this.form.password === this.form.repeatPassword){
-            const newPlayer = {
-              name: this.form.username,
-              password: this.form.password,
-              achievements:{
-                totalRolls: 0,
-                totalPoints: 0,
-                gamesPlayed: 0,
-                gamesWon: 0
-              },
-              log_in:true
-            }
-            PlayersService.postPlayer(newPlayer)
-            .then( res => eventBus.$emit('player-added', res))
-            .then( res => eventBus.$emit('credentials-submitted', this.form))
-            .then( res => eventBus.$emit('show-pop-up',false))
+            PlayersService.checkUsernameUsed(this.form.username)
+            .then(res => {
+              if (!res){
+                const newPlayer = {
+                  name: this.form.username,
+                  password: this.form.password,
+                  achievements:{
+                    totalRolls: 0,
+                    totalPoints: 0,
+                    gamesPlayed: 0,
+                    gamesWon: 0
+                  },
+                  log_in:true
+                }
+                PlayersService.postPlayer(newPlayer)
+                .then( res => eventBus.$emit('player-added', res))
+                .then( res => eventBus.$emit('credentials-submitted', this.form))
+                .then( res => eventBus.$emit('show-pop-up',false))
+              } else {
+                this.errorMessage = "I'm sorry, that username has already been taken."
+                this.form.username = ''
+                this.form.password = ''
+                this.form.repeatPassword = ''
+              }
+            })
           } else {
             this.errorMessage = "You've not copied your password correctly, please try again";
           }
@@ -83,7 +93,10 @@ export default {
       'pop-up-base': PopupBase
     },
     mounted() {
-      eventBus.$on('login-error', (message) => this.errorMessage = message)
+      eventBus.$on('login-error', (message) => {
+        this.errorMessage = message
+        this.form.password = ""
+      })
     }
 
 }

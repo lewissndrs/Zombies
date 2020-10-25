@@ -27,5 +27,10 @@ export default {
   checkForLoggedIn(){
     return fetch(baseURL + "log")
     .then(res => res.json())
+  },
+
+  checkUsernameUsed(username){
+    return fetch(baseURL + "name/" + username)
+    .then(res => res.json())
   }
 }

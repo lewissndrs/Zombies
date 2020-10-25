@@ -53,8 +53,18 @@ const createRouter = function(collection){
     });
 
     router.get('/log', (req, res) => {
-        console.log("I'm Getting this far");
         collection.findOne({log_in: true})
+        .then((doc) => res.json(doc))
+        .catch((err) => {
+            console.error(err);
+            res.status(500);
+            res.json({status: 500, error: error});
+        });
+    });
+
+    router.get('/name/:name', (req, res) => {
+        const name = req.params.name
+        collection.findOne({name: name})
         .then((doc) => res.json(doc))
         .catch((err) => {
             console.error(err);

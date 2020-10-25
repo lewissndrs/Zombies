@@ -78,6 +78,7 @@ export default {
     background-color: darkred;
     color: white;
     border-radius: 8px;
+    cursor: pointer;
   }
 
   #play-game-holder {
