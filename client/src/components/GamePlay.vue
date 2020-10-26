@@ -4,7 +4,7 @@
     <h2 v-if="currentRound">Current Round: {{currentRound}}</h2>
     <div id="myModal" class="modal">
       <!-- Modal content -->
-      <div class="modal-content" v-if="currentRound">
+      <div class="modal-content" v-if="currentRound && !winner">
         <span class="close">&times;</span>
       <p>Round {{currentRound}} Begins</p>
       </div>
@@ -12,7 +12,7 @@
 
     <h1 v-if="winner" style="color: yellowgreen">The Winner is {{winner.name}}</h1>
 
-    <winner-pop-up v-if="showPopUp" :winner="winner" />
+    <winner-pop-up v-if="winner" :winner="winner" />
 
     <div class="AIs">
       <ai-display v-for="(aI, index) of aIs" :key="index" :aI="aI" :currentRound="currentRound"></ai-display>

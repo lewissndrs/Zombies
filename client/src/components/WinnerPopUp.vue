@@ -36,6 +36,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: red
 }
 
 #message > h2, #message > h3, #message > button {
@@ -44,6 +45,7 @@ export default {
 
 #message > button {
     font-size: 20px;
+   
 }
 
 
