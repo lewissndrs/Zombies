@@ -83,7 +83,7 @@ export default {
     displayLeaderBoard() {
       let maximum = this.players[0].achievements.gamesWon;
 
-      let array = this.players.sort(function(a, b){
+      let array = [...this.players].sort(function(a, b){
         return b.achievements.gamesWon - a.achievements.gamesWon
       })
       if (array.length <= 5){

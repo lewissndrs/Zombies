@@ -4,7 +4,7 @@
     <h2 v-if="currentRound">Current Round: {{currentRound}}</h2>
     <div id="myModal" class="modal">
       <!-- Modal content -->
-      <div class="modal-content" v-if="currentRound">
+      <div class="modal-content" v-if="currentRound && !winner">
         <span class="close">&times;</span>
       <p>Round {{currentRound}} Begins</p>
       </div>
@@ -17,7 +17,7 @@
 
     <h1 v-if="winner" style="color: yellowgreen">The Winner is {{winner.name}}</h1>
 
-    <winner-pop-up v-if="showPopUp" :winner="winner" />
+    <winner-pop-up v-if="winner" :winner="winner" />
 
     <div class="AIs">
       <ai-display v-for="(aI, index) of aIs" :key="index" :aI="aI" :currentRound="currentRound"></ai-display>
@@ -36,6 +36,21 @@
         </p>
       </div>
       <div v-if="died">Brains &#129504;: <b>You Died</b></div>
+
+      <div id="myDied" class="died">
+        <div class="died-content" v-if="died">
+          <!-- <span class="closeDied" v-on:click="closeDead">&times;</span> -->
+          <h1 class="you-died">You Died!</h1>
+          <div class="image-close">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRbHEok0ABPJvT6NgVFv62SXN96VX2LDJ9e0Q&usqp=CAU" alt="blank" class="dead-image"> 
+            <span class="closeDied" v-on:click="closeDead">&times;</span>
+          </div>
+          
+          <!-- <h1>You Died</h1>
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRbHEok0ABPJvT6NgVFv62SXN96VX2LDJ9e0Q&usqp=CAU" alt="blank">  -->
+          
+      </div>
+      </div>
       <div>Shots &#128165;: {{playerShotsRound.length}}
         <p class="icon-list">
           <main v-for="(shot, index) of playerShotsRound" :key="index">
@@ -178,6 +193,7 @@ import WinnerPopUp from './WinnerPopUp.vue';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import AITurnAnimation from './AITurnAnimation.vue';
+import PopupBase from '@/components/PopupBase.vue';
 
 export default {
   name: 'game-play',
@@ -261,7 +277,6 @@ export default {
       setTimeout(()=>{
         this.diceRolled = data[2]
         
-        
         for (let brain of data[0][0]){
           this.playerBrainsRound.push(brain)
         }
@@ -280,9 +295,6 @@ export default {
         this.diceRolling = false
       },1500)
       
-      
-
-      
     },
 
   toggleClasses(die) {
@@ -295,6 +307,17 @@ export default {
       if (this.died === false){
         this.playerBrains += this.playerBrainsRound.length
       }
+      else if(this.died === true){
+          let modal = document.getElementById("myDied");
+          modal.style.display = "block";
+          let span = document.getElementsByClassName("closeDied")[2];
+          window.onclick = function(event) {
+            if (event.target == modal) {
+            modal.style.display = "none";
+            }
+        }
+        }
+
       if (this.playerBrains > 12){
         this.winner = this.currentPlayer
         this.showPopUp = true
@@ -304,6 +327,9 @@ export default {
         this.currentPlayer = this.players[0]
         this.playAI()
       }
+
+      
+      this.takingTurn = false
     },
     playAI(){
       while (this.currentPlayer != this.player && !this.winner){
@@ -358,6 +384,10 @@ export default {
         setTimeout(() => {
           this.AIPlaying = false;
         }, 2000);
+    },
+    closeDead(){
+      let modal = document.getElementById("myDied");
+      modal.style.display = "none";
     }
   },
   components: {
@@ -367,7 +397,8 @@ export default {
     'red-dice':RedDice,
     'winner-pop-up': WinnerPopUp,
     'loading': Loading,
-    'ai-turn-animation': AITurnAnimation
+    'ai-turn-animation': AITurnAnimation,
+    'pop-up-base':PopupBase
   },
   mounted(){
     let list = GamesService.shuffle(this.allAIs)
@@ -649,6 +680,7 @@ export default {
   float: right;
   font-size: 28px;
   font-weight: bold;
+  
 }
 
 .close:hover,
@@ -656,6 +688,62 @@ export default {
   color: #000;
   text-decoration: none;
   cursor: pointer;
+}
+
+.died {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+  
+}
+
+/* Modal Content for dead */
+.died-content {
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to top, #870000, #190a05);
+}
+
+/* The Close for dead Button */
+.closeDied {
+  color: #aaaaaa;
+  float: right;
+  font-size: 48px;
+  font-weight: bold;
+  margin-left: 34%;
+}
+
+.closeDied:hover,
+.closeDied:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.image-close {
+  display: flex;
+  align-items: center;
+}
+
+.you-died{
+  align-self: center;
+}
+
+.dead-image{
+  justify-self: center;
+  margin-left: 37%;
 }
 
 
