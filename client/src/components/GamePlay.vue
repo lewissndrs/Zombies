@@ -285,21 +285,7 @@ export default {
         }
         this.diceRolling = false
       },1500)
-
-        if(this.died === true){
-          let modal = document.getElementById("myDied");
-          modal.style.display = "block";
-          let span = document.getElementsByClassName("closeDied")[0];
-          this.players.push(this.players.shift())
-          span.onclick = function() {
-            modal.style.display = "none";
-          }
-          window.onclick = function(event) {
-            if (event.target == modal) {
-            modal.style.display = "none";
-            }
-        }
-        }       
+      
     },
 
   toggleClasses(die) {
@@ -312,17 +298,16 @@ export default {
       if (this.died === false){
         this.playerBrains += this.playerBrainsRound.length
       }
-      // else if(this.died === true){
-      //     let modal = document.getElementById("myDied");
-      //     modal.style.display = "block";
-      //     let span = document.getElementsByClassName("closeDied")[2];
-      //     this.players.push(this.players.shift())
-      //     window.onclick = function(event) {
-      //       if (event.target == modal) {
-      //       modal.style.display = "none";
-      //       }
-      //   }
-      //   }
+      else if(this.died === true){
+          let modal = document.getElementById("myDied");
+          modal.style.display = "block";
+          let span = document.getElementsByClassName("closeDied")[2];
+          window.onclick = function(event) {
+            if (event.target == modal) {
+            modal.style.display = "none";
+            }
+        }
+        }
 
       if (this.playerBrains > 12){
         this.winner = this.currentPlayer
@@ -335,7 +320,7 @@ export default {
       }
 
       
-      // this.takingTurn = false
+      this.takingTurn = false
     },
     playAI(){
       while (this.currentPlayer != this.player && !this.winner){
