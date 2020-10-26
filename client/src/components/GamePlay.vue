@@ -10,6 +10,11 @@
       </div>
     </div>
 
+    <loading :active='AIPlaying' :is-full-page='true'>
+      <!-- custom animation -->
+      <ai-turn-animation />
+    </loading>
+
     <h1 v-if="winner" style="color: yellowgreen">The Winner is {{winner.name}}</h1>
 
     <winner-pop-up v-if="showPopUp" :winner="winner" />
@@ -170,6 +175,9 @@ import Dice from './Dice.vue';
 import YellowDice from './YellowDice.vue';
 import RedDice from './RedDice.vue';
 import WinnerPopUp from './WinnerPopUp.vue';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+import AITurnAnimation from './AITurnAnimation.vue';
 
 export default {
   name: 'game-play',
@@ -214,7 +222,8 @@ export default {
       died: false,
       diceRolling: false,
       winner: null,
-      showPopUp: false
+      showPopUp: false,
+      AIPlaying: false
 
     }
   },
@@ -318,7 +327,12 @@ export default {
           
           this.currentPlayer = this.players[0]
         } else {
+          // data for AI turn
           let data = GamesService.aITurn(this.currentPlayer.brains, this.difficulty)
+
+          // loader
+          this.AIPlayOverlay()
+
           this.currentPlayer.died = false
           if (data[0] === 'died'){
             this.currentPlayer.died = true
@@ -338,6 +352,12 @@ export default {
     },
     newGame(){
       window.location.reload()
+    },
+    AIPlayOverlay () {
+      this.AIPlaying = true;
+        setTimeout(() => {
+          this.AIPlaying = false;
+        }, 2000);
     }
   },
   components: {
@@ -345,7 +365,9 @@ export default {
     'dice':Dice,
     'yellow-dice':YellowDice,
     'red-dice':RedDice,
-    'winner-pop-up': WinnerPopUp
+    'winner-pop-up': WinnerPopUp,
+    'loading': Loading,
+    'ai-turn-animation': AITurnAnimation
   },
   mounted(){
     let list = GamesService.shuffle(this.allAIs)
