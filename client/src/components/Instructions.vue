@@ -4,8 +4,8 @@
     <div id="play-game-holder" v-if="player">
       <label for="selectDifficulty">Please Select difficulty</label>
       <select v-model="difficulty" v-on:change="changeDifficulty">
-        <option value=1>Easy</option>
-        <option value=2>Difficult</option>
+        <option value=2>Easy</option>
+        <option value=1>Difficult</option>
       </select>
       <button id="button-play"  @click='gameRoute'>Play Game!</button>
     </div>

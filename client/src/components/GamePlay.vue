@@ -4,15 +4,15 @@
     <h2 v-if="currentRound">Current Round: {{currentRound}}</h2>
     <div id="myModal" class="modal">
       <!-- Modal content -->
-      <div class="modal-content" v-if="currentRound && !winner">
+      <div class="modal-content" v-if="currentRound && !winner && !AIPlaying">
         <span class="close">&times;</span>
       <p>Round {{currentRound}} Begins</p>
       </div>
     </div>
 
-    <loading :active='AIPlaying' :is-full-page='true'>
+    <loading :active='AIPlaying' :is-full-page='true' v-if="randomEvent === false && !winner">
       <!-- custom animation -->
-      <ai-turn-animation />
+      <ai-turn-animation  v-if="randomEvent === false"/>
     </loading>
 
     <h1 v-if="winner" style="color: yellowgreen">The Winner is {{winner.name}}</h1>
@@ -39,15 +39,11 @@
 
       <div id="myDied" class="died">
         <div class="died-content" v-if="died">
-          <!-- <span class="closeDied" v-on:click="closeDead">&times;</span> -->
           <h1 class="you-died">You Died!</h1>
           <div class="image-close">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRbHEok0ABPJvT6NgVFv62SXN96VX2LDJ9e0Q&usqp=CAU" alt="blank" class="dead-image"> 
             <span class="closeDied" v-on:click="closeDead">&times;</span>
           </div>
-          
-          <!-- <h1>You Died</h1>
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRbHEok0ABPJvT6NgVFv62SXN96VX2LDJ9e0Q&usqp=CAU" alt="blank">  -->
           
       </div>
       </div>
@@ -69,112 +65,6 @@
       <dice :colour="diceColours[0]" roll="even-roll" id="die-1"></dice>
       <dice :colour="diceColours[1]" roll="even-roll" id="die-2"></dice>
       <dice :colour="diceColours[2]" roll="even-roll" id="die-3"></dice>
-    
-      <!-- <ol class="die-list even-roll" :class="{ 'red':diceNumbers[0]==='red'}" data-roll="1" id="die-1">
-        <li class="die-item" data-side="1">
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="2">
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="3">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="4">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="5">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="6">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-      </ol>
-      <ol class="die-list odd-roll" data-roll="1" id="die-2">
-        <li class="die-item" data-side="1">
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="2">
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="3">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="4">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="5">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="6">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-      </ol>
-      <ol class="die-list odd-roll" data-roll="1" id="die-2">
-        <li class="die-item" data-side="1">
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="2">
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="3">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="4">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="5">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-        <li class="die-item" data-side="6">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </li>
-      </ol> -->
     </div>
   </div>
 
@@ -239,7 +129,8 @@ export default {
       diceRolling: false,
       winner: null,
       showPopUp: false,
-      AIPlaying: false
+      AIPlaying: false,
+      randomEvent: false
 
     }
   },
@@ -308,6 +199,7 @@ export default {
         this.playerBrains += this.playerBrainsRound.length
       }
       else if(this.died === true){
+          this.randomEvent =  true
           let modal = document.getElementById("myDied");
           modal.style.display = "block";
           let span = document.getElementsByClassName("closeDied")[2];
@@ -383,11 +275,16 @@ export default {
       this.AIPlaying = true;
         setTimeout(() => {
           this.AIPlaying = false;
-        }, 2000);
+        }, 4500);
     },
     closeDead(){
-      let modal = document.getElementById("myDied");
-      modal.style.display = "none";
+       setTimeout(() => {
+          this.randomEvent = false;
+        }, 100);
+        let modal = document.getElementById("myDied");
+        modal.style.display = "none";
+      
+      
     }
   },
   components: {
@@ -473,33 +370,6 @@ export default {
 .odd-roll {
   transition: transform 1.25s ease-out;
 }
-/* .die-item {
-  background-color: yellow;
-  box-shadow: inset -0.35rem 0.35rem 0.75rem rgba(0, 0, 0, 0.3),
-    inset 0.5rem -0.25rem 0.5rem rgba(0, 0, 0, 0.15);
-  display: grid;
-  grid-column: 1;
-  grid-row: 1;
-  grid-template-areas:
-    "one two three"
-    "four five six"
-    "seven eight nine";
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  height: 100%;
-  padding: 1rem;
-  width: 100%;
-} */
-/* .dot {
-  align-self: center;
-  background-color: #676767;
-  border-radius: 50%;
-  box-shadow: inset -0.15rem 0.15rem 0.25rem rgba(0, 0, 0, 0.5);
-  display: block;
-  height: 1.25rem;
-  justify-self: center;
-  width: 1.25rem;
-} */
 .die-item {
   height: 100%;
   width: 100%;
