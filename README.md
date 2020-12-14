@@ -2,7 +2,19 @@
 
 This project is a clone of the popular tabletop game Zombie Dice by Steve Jackson Games. The goal of this project was to produce a game where a single player could play against three AI players. Players can log in to the app, and various statistics will be saved about their gameplay. Vue framework was used for the front end, with an Express/MongoDB backend.
 
-# Brief
+## Screenshots
+
+A game in progress.
+![gameplay](https://github.com/lewissndrs/Zombies/blob/main/screenshots/gameplay.jpg)
+
+The log-in page for the app.
+![login](https://github.com/lewissndrs/Zombies/blob/main/screenshots/login.jpg)
+
+The front page with the player's stats and awards visible.
+![awards](https://github.com/lewissndrs/Zombies/blob/main/screenshots/leaderboard.jpg)
+
+
+## Brief
 
 ## MVP
 A user should be able to:
